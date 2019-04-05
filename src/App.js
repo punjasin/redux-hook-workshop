@@ -1,28 +1,48 @@
-import React, { Component } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+const initialState = {
+  count: 0
+};
 
-export default App;
+const reducer = (state, { type, payload }) => {
+  switch (type) {
+    case 'COUNTER_CLICK':
+      return {
+        ...state,
+        count: payload
+      };
+    default:
+      return state;
+  }
+};
+
+export default function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { count } = state;
+  useEffect(() => {
+    document.title = `You clicked ${count} times`;
+  });
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <p>You clicked {count} times</p>
+        <button
+          onClick={() => {
+            dispatch({
+              type: 'COUNTER_CLICK',
+              payload: count + 1
+            });
+          }}
+        >
+          Click me
+        </button>
+      </header>
+    </div>
+  );
+}
